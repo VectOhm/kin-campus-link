@@ -9,16 +9,17 @@ export const Route = createFileRoute("/teacher/attendance")({ component: Attenda
 function AttendancePage() {
   const { state, update, currentUser } = useStore();
   const teacher = state.teachers.find((t) => t.id === currentUser?.teacherId);
-  const [classId, setClassId] = useState(teacher?.classes[0] ?? "");
+  const [classId, setClassId] = useState<string>(teacher?.classes[0] ?? "");
   const [date, setDate] = useState(new Date().toISOString().split("T")[0]);
   if (!teacher) return null;
   const students = state.students.filter((s) => s.classId === classId);
+  const teacherId = teacher.id;
 
   function setStatus(studentId: string, status: "present" | "absent" | "late") {
     update((s) => {
       const existing = s.attendance.find((a) => a.studentId === studentId && a.date === date);
       if (existing) return { ...s, attendance: s.attendance.map((a) => a.id === existing.id ? { ...a, status } : a) };
-      return { ...s, attendance: [...s.attendance, { id: `at_${Date.now()}_${studentId}`, studentId, classId, date, status, markedBy: teacher.id }] };
+      return { ...s, attendance: [...s.attendance, { id: `at_${Date.now()}_${studentId}`, studentId, classId, date, status, markedBy: teacherId }] };
     });
   }
 
