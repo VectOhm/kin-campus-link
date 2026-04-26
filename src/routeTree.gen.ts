@@ -25,6 +25,16 @@ import { Route as TeacherMarksRouteImport } from './routes/teacher.marks'
 import { Route as TeacherHomeworkRouteImport } from './routes/teacher.homework'
 import { Route as TeacherClassesRouteImport } from './routes/teacher.classes'
 import { Route as TeacherAttendanceRouteImport } from './routes/teacher.attendance'
+import { Route as ParentTransportRouteImport } from './routes/parent.transport'
+import { Route as ParentTimetableRouteImport } from './routes/parent.timetable'
+import { Route as ParentResultsRouteImport } from './routes/parent.results'
+import { Route as ParentNotificationsRouteImport } from './routes/parent.notifications'
+import { Route as ParentNotesRouteImport } from './routes/parent.notes'
+import { Route as ParentMessagesRouteImport } from './routes/parent.messages'
+import { Route as ParentHomeworkRouteImport } from './routes/parent.homework'
+import { Route as ParentFeesRouteImport } from './routes/parent.fees'
+import { Route as ParentCalendarRouteImport } from './routes/parent.calendar'
+import { Route as ParentAttendanceRouteImport } from './routes/parent.attendance'
 import { Route as AdminTransportRouteImport } from './routes/admin.transport'
 import { Route as AdminTimetableRouteImport } from './routes/admin.timetable'
 import { Route as AdminTeachersRouteImport } from './routes/admin.teachers'
@@ -117,6 +127,56 @@ const TeacherAttendanceRoute = TeacherAttendanceRouteImport.update({
   path: '/attendance',
   getParentRoute: () => TeacherRoute,
 } as any)
+const ParentTransportRoute = ParentTransportRouteImport.update({
+  id: '/transport',
+  path: '/transport',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentTimetableRoute = ParentTimetableRouteImport.update({
+  id: '/timetable',
+  path: '/timetable',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentResultsRoute = ParentResultsRouteImport.update({
+  id: '/results',
+  path: '/results',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentNotificationsRoute = ParentNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentNotesRoute = ParentNotesRouteImport.update({
+  id: '/notes',
+  path: '/notes',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentMessagesRoute = ParentMessagesRouteImport.update({
+  id: '/messages',
+  path: '/messages',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentHomeworkRoute = ParentHomeworkRouteImport.update({
+  id: '/homework',
+  path: '/homework',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentFeesRoute = ParentFeesRouteImport.update({
+  id: '/fees',
+  path: '/fees',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentCalendarRoute = ParentCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => ParentRoute,
+} as any)
+const ParentAttendanceRoute = ParentAttendanceRouteImport.update({
+  id: '/attendance',
+  path: '/attendance',
+  getParentRoute: () => ParentRoute,
+} as any)
 const AdminTransportRoute = AdminTransportRouteImport.update({
   id: '/transport',
   path: '/transport',
@@ -190,6 +250,16 @@ export interface FileRoutesByFullPath {
   '/admin/teachers': typeof AdminTeachersRoute
   '/admin/timetable': typeof AdminTimetableRoute
   '/admin/transport': typeof AdminTransportRoute
+  '/parent/attendance': typeof ParentAttendanceRoute
+  '/parent/calendar': typeof ParentCalendarRoute
+  '/parent/fees': typeof ParentFeesRoute
+  '/parent/homework': typeof ParentHomeworkRoute
+  '/parent/messages': typeof ParentMessagesRoute
+  '/parent/notes': typeof ParentNotesRoute
+  '/parent/notifications': typeof ParentNotificationsRoute
+  '/parent/results': typeof ParentResultsRoute
+  '/parent/timetable': typeof ParentTimetableRoute
+  '/parent/transport': typeof ParentTransportRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
   '/teacher/classes': typeof TeacherClassesRoute
   '/teacher/homework': typeof TeacherHomeworkRoute
@@ -216,6 +286,16 @@ export interface FileRoutesByTo {
   '/admin/teachers': typeof AdminTeachersRoute
   '/admin/timetable': typeof AdminTimetableRoute
   '/admin/transport': typeof AdminTransportRoute
+  '/parent/attendance': typeof ParentAttendanceRoute
+  '/parent/calendar': typeof ParentCalendarRoute
+  '/parent/fees': typeof ParentFeesRoute
+  '/parent/homework': typeof ParentHomeworkRoute
+  '/parent/messages': typeof ParentMessagesRoute
+  '/parent/notes': typeof ParentNotesRoute
+  '/parent/notifications': typeof ParentNotificationsRoute
+  '/parent/results': typeof ParentResultsRoute
+  '/parent/timetable': typeof ParentTimetableRoute
+  '/parent/transport': typeof ParentTransportRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
   '/teacher/classes': typeof TeacherClassesRoute
   '/teacher/homework': typeof TeacherHomeworkRoute
@@ -246,6 +326,16 @@ export interface FileRoutesById {
   '/admin/teachers': typeof AdminTeachersRoute
   '/admin/timetable': typeof AdminTimetableRoute
   '/admin/transport': typeof AdminTransportRoute
+  '/parent/attendance': typeof ParentAttendanceRoute
+  '/parent/calendar': typeof ParentCalendarRoute
+  '/parent/fees': typeof ParentFeesRoute
+  '/parent/homework': typeof ParentHomeworkRoute
+  '/parent/messages': typeof ParentMessagesRoute
+  '/parent/notes': typeof ParentNotesRoute
+  '/parent/notifications': typeof ParentNotificationsRoute
+  '/parent/results': typeof ParentResultsRoute
+  '/parent/timetable': typeof ParentTimetableRoute
+  '/parent/transport': typeof ParentTransportRoute
   '/teacher/attendance': typeof TeacherAttendanceRoute
   '/teacher/classes': typeof TeacherClassesRoute
   '/teacher/homework': typeof TeacherHomeworkRoute
@@ -277,6 +367,16 @@ export interface FileRouteTypes {
     | '/admin/teachers'
     | '/admin/timetable'
     | '/admin/transport'
+    | '/parent/attendance'
+    | '/parent/calendar'
+    | '/parent/fees'
+    | '/parent/homework'
+    | '/parent/messages'
+    | '/parent/notes'
+    | '/parent/notifications'
+    | '/parent/results'
+    | '/parent/timetable'
+    | '/parent/transport'
     | '/teacher/attendance'
     | '/teacher/classes'
     | '/teacher/homework'
@@ -303,6 +403,16 @@ export interface FileRouteTypes {
     | '/admin/teachers'
     | '/admin/timetable'
     | '/admin/transport'
+    | '/parent/attendance'
+    | '/parent/calendar'
+    | '/parent/fees'
+    | '/parent/homework'
+    | '/parent/messages'
+    | '/parent/notes'
+    | '/parent/notifications'
+    | '/parent/results'
+    | '/parent/timetable'
+    | '/parent/transport'
     | '/teacher/attendance'
     | '/teacher/classes'
     | '/teacher/homework'
@@ -332,6 +442,16 @@ export interface FileRouteTypes {
     | '/admin/teachers'
     | '/admin/timetable'
     | '/admin/transport'
+    | '/parent/attendance'
+    | '/parent/calendar'
+    | '/parent/fees'
+    | '/parent/homework'
+    | '/parent/messages'
+    | '/parent/notes'
+    | '/parent/notifications'
+    | '/parent/results'
+    | '/parent/timetable'
+    | '/parent/transport'
     | '/teacher/attendance'
     | '/teacher/classes'
     | '/teacher/homework'
@@ -467,6 +587,76 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherAttendanceRouteImport
       parentRoute: typeof TeacherRoute
     }
+    '/parent/transport': {
+      id: '/parent/transport'
+      path: '/transport'
+      fullPath: '/parent/transport'
+      preLoaderRoute: typeof ParentTransportRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/timetable': {
+      id: '/parent/timetable'
+      path: '/timetable'
+      fullPath: '/parent/timetable'
+      preLoaderRoute: typeof ParentTimetableRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/results': {
+      id: '/parent/results'
+      path: '/results'
+      fullPath: '/parent/results'
+      preLoaderRoute: typeof ParentResultsRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/notifications': {
+      id: '/parent/notifications'
+      path: '/notifications'
+      fullPath: '/parent/notifications'
+      preLoaderRoute: typeof ParentNotificationsRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/notes': {
+      id: '/parent/notes'
+      path: '/notes'
+      fullPath: '/parent/notes'
+      preLoaderRoute: typeof ParentNotesRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/messages': {
+      id: '/parent/messages'
+      path: '/messages'
+      fullPath: '/parent/messages'
+      preLoaderRoute: typeof ParentMessagesRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/homework': {
+      id: '/parent/homework'
+      path: '/homework'
+      fullPath: '/parent/homework'
+      preLoaderRoute: typeof ParentHomeworkRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/fees': {
+      id: '/parent/fees'
+      path: '/fees'
+      fullPath: '/parent/fees'
+      preLoaderRoute: typeof ParentFeesRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/calendar': {
+      id: '/parent/calendar'
+      path: '/calendar'
+      fullPath: '/parent/calendar'
+      preLoaderRoute: typeof ParentCalendarRouteImport
+      parentRoute: typeof ParentRoute
+    }
+    '/parent/attendance': {
+      id: '/parent/attendance'
+      path: '/attendance'
+      fullPath: '/parent/attendance'
+      preLoaderRoute: typeof ParentAttendanceRouteImport
+      parentRoute: typeof ParentRoute
+    }
     '/admin/transport': {
       id: '/admin/transport'
       path: '/transport'
@@ -580,10 +770,30 @@ const AdminRouteChildren: AdminRouteChildren = {
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ParentRouteChildren {
+  ParentAttendanceRoute: typeof ParentAttendanceRoute
+  ParentCalendarRoute: typeof ParentCalendarRoute
+  ParentFeesRoute: typeof ParentFeesRoute
+  ParentHomeworkRoute: typeof ParentHomeworkRoute
+  ParentMessagesRoute: typeof ParentMessagesRoute
+  ParentNotesRoute: typeof ParentNotesRoute
+  ParentNotificationsRoute: typeof ParentNotificationsRoute
+  ParentResultsRoute: typeof ParentResultsRoute
+  ParentTimetableRoute: typeof ParentTimetableRoute
+  ParentTransportRoute: typeof ParentTransportRoute
   ParentIndexRoute: typeof ParentIndexRoute
 }
 
 const ParentRouteChildren: ParentRouteChildren = {
+  ParentAttendanceRoute: ParentAttendanceRoute,
+  ParentCalendarRoute: ParentCalendarRoute,
+  ParentFeesRoute: ParentFeesRoute,
+  ParentHomeworkRoute: ParentHomeworkRoute,
+  ParentMessagesRoute: ParentMessagesRoute,
+  ParentNotesRoute: ParentNotesRoute,
+  ParentNotificationsRoute: ParentNotificationsRoute,
+  ParentResultsRoute: ParentResultsRoute,
+  ParentTimetableRoute: ParentTimetableRoute,
+  ParentTransportRoute: ParentTransportRoute,
   ParentIndexRoute: ParentIndexRoute,
 }
 
