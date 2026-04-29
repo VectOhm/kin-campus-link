@@ -122,3 +122,38 @@ export function FormActions({ onCancel, submitLabel = "Save" }: { onCancel: () =
     </div>
   );
 }
+
+export function MultiToggle({
+  label,
+  values,
+  selected,
+  onChange,
+  getLabel,
+}: {
+  label: string;
+  values: string[];
+  selected: string[];
+  onChange: (next: string[]) => void;
+  getLabel: (v: string) => string;
+}) {
+  return (
+    <div className="col-span-full">
+      <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{label}</label>
+      <div className="mt-1.5 flex flex-wrap gap-1.5">
+        {values.map((v) => {
+          const on = selected.includes(v);
+          return (
+            <button
+              key={v}
+              type="button"
+              onClick={() => onChange(on ? selected.filter((x) => x !== v) : [...selected, v])}
+              className={`rounded-md border px-2 py-1 text-xs ${on ? "border-accent bg-accent text-accent-foreground" : "border-border hover:bg-muted"}`}
+            >
+              {getLabel(v)}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
