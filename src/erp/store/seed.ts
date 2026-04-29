@@ -18,6 +18,7 @@ import type {
   CalendarEvent,
   User,
   Salary,
+  ChatGroup,
 } from "../types";
 
 const id = (p: string, n: number | string) => `${p}_${n}`;
@@ -435,6 +436,29 @@ export function buildSeed(): ERPState {
     });
   }
 
+  // Chat groups — one per class. Members: class teacher + subject teachers (user ids) + student parent accounts
+  const chatGroups: ChatGroup[] = classes.map((c) => {
+    const csaTeacherIds = Array.from(
+      new Set(classSubjectAssignments.filter((a) => a.classId === c.id).map((a) => a.teacherId)),
+    );
+    if (c.classTeacherId && !csaTeacherIds.includes(c.classTeacherId)) csaTeacherIds.push(c.classTeacherId);
+    const teacherUserIds = csaTeacherIds
+      .map((tid) => users.find((u) => u.teacherId === tid)?.id)
+      .filter((x): x is string => !!x);
+    const studentUserIds = students
+      .filter((s) => s.classId === c.id)
+      .map((s) => users.find((u) => u.studentId === s.id)?.id)
+      .filter((x): x is string => !!x);
+    return {
+      id: `grp_${c.id}`,
+      name: `${c.name} — Class Group`,
+      classId: c.id,
+      teacherUserIds,
+      studentUserIds,
+      createdAt: daysAgo(60),
+    };
+  });
+
   return {
     users,
     students,
@@ -458,5 +482,6 @@ export function buildSeed(): ERPState {
     messages: [],
     salaries,
     busFeeOverrides: [],
+    chatGroups,
   };
 }

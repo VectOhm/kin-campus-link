@@ -223,12 +223,27 @@ export interface ActivityLog {
 export interface Message {
   id: string;
   fromId: string;
+  /** legacy 1:1 — empty for group messages */
   toId: string;
   fromName: string;
   toName: string;
   body: string;
   createdAt: string;
   read: boolean;
+  /** group thread id (preferred). When set, toId is "" */
+  groupId?: string;
+}
+
+/** Class-based chat group: one per class, contains class teacher + subject teachers + students/parents */
+export interface ChatGroup {
+  id: string;
+  name: string;
+  classId: string;
+  /** user ids of teachers in this group */
+  teacherUserIds: string[];
+  /** user ids of student/parent accounts in this group */
+  studentUserIds: string[];
+  createdAt: string;
 }
 
 export interface Salary {
@@ -274,4 +289,5 @@ export interface ERPState {
   messages: Message[];
   salaries: Salary[];
   busFeeOverrides: BusFeeOverride[];
+  chatGroups: ChatGroup[];
 }
