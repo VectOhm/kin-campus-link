@@ -148,6 +148,10 @@ export interface BusRoute {
   driverPhone: string;
   busNumber: string;
   stops: BusStop[];
+  /** monthly base fare for the route (₹) */
+  baseFare?: number;
+  /** ₹ per km surcharge multiplier */
+  pricePerKm?: number;
 }
 
 export interface BusStop {
@@ -155,13 +159,24 @@ export interface BusStop {
   name: string;
   pickupTime: string;
   dropTime: string;
+  /** distance from school in km */
+  distanceKm?: number;
+  /** destination/area label */
+  destination?: string;
 }
 
 export interface Attendance {
   id: string;
   studentId: string;
   classId: string;
-  date: string; // YYYY-MM-DD
+  /** YYYY-MM-DD for daily, kept for back-compat */
+  date: string;
+  /** YYYY-MM monthly bucket (new model) */
+  month?: string;
+  /** for monthly: total school days in month */
+  totalDays?: number;
+  /** for monthly: days student was present */
+  presentDays?: number;
   status: "present" | "absent" | "late";
   markedBy: string;
 }
@@ -215,6 +230,26 @@ export interface Message {
   read: boolean;
 }
 
+export interface Salary {
+  id: string;
+  teacherId: string;
+  month: string; // YYYY-MM
+  basic: number;
+  allowances: number;
+  deductions: number;
+  taxRate: number; // percent
+  /** computed and stored snapshot */
+  net: number;
+  status: "paid" | "pending";
+  paidOn?: string;
+}
+
+/** Per-student bus fee assignments are derived from busRoute + stop, but parents can also have fixed extra */
+export interface BusFeeOverride {
+  studentId: string;
+  amount: number; // monthly
+}
+
 export interface ERPState {
   users: User[];
   students: Student[];
@@ -236,4 +271,6 @@ export interface ERPState {
   calendar: CalendarEvent[];
   activityLogs: ActivityLog[];
   messages: Message[];
+  salaries: Salary[];
+  busFeeOverrides: BusFeeOverride[];
 }
