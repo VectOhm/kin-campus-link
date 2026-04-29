@@ -42,6 +42,7 @@ import { Route as AdminStudentsRouteImport } from './routes/admin.students'
 import { Route as AdminNotificationsRouteImport } from './routes/admin.notifications'
 import { Route as AdminLogsRouteImport } from './routes/admin.logs'
 import { Route as AdminFeesRouteImport } from './routes/admin.fees'
+import { Route as AdminExpensesRouteImport } from './routes/admin.expenses'
 import { Route as AdminClassesRouteImport } from './routes/admin.classes'
 import { Route as AdminCalendarRouteImport } from './routes/admin.calendar'
 import { Route as AdminAnalyticsRouteImport } from './routes/admin.analytics'
@@ -211,6 +212,11 @@ const AdminFeesRoute = AdminFeesRouteImport.update({
   path: '/fees',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminExpensesRoute = AdminExpensesRouteImport.update({
+  id: '/expenses',
+  path: '/expenses',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminClassesRoute = AdminClassesRouteImport.update({
   id: '/classes',
   path: '/classes',
@@ -236,6 +242,7 @@ export interface FileRoutesByFullPath {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/calendar': typeof AdminCalendarRoute
   '/admin/classes': typeof AdminClassesRoute
+  '/admin/expenses': typeof AdminExpensesRoute
   '/admin/fees': typeof AdminFeesRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -271,6 +278,7 @@ export interface FileRoutesByTo {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/calendar': typeof AdminCalendarRoute
   '/admin/classes': typeof AdminClassesRoute
+  '/admin/expenses': typeof AdminExpensesRoute
   '/admin/fees': typeof AdminFeesRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -310,6 +318,7 @@ export interface FileRoutesById {
   '/admin/analytics': typeof AdminAnalyticsRoute
   '/admin/calendar': typeof AdminCalendarRoute
   '/admin/classes': typeof AdminClassesRoute
+  '/admin/expenses': typeof AdminExpensesRoute
   '/admin/fees': typeof AdminFeesRoute
   '/admin/logs': typeof AdminLogsRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -350,6 +359,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/calendar'
     | '/admin/classes'
+    | '/admin/expenses'
     | '/admin/fees'
     | '/admin/logs'
     | '/admin/notifications'
@@ -385,6 +395,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/calendar'
     | '/admin/classes'
+    | '/admin/expenses'
     | '/admin/fees'
     | '/admin/logs'
     | '/admin/notifications'
@@ -423,6 +434,7 @@ export interface FileRouteTypes {
     | '/admin/analytics'
     | '/admin/calendar'
     | '/admin/classes'
+    | '/admin/expenses'
     | '/admin/fees'
     | '/admin/logs'
     | '/admin/notifications'
@@ -694,6 +706,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminFeesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/expenses': {
+      id: '/admin/expenses'
+      path: '/expenses'
+      fullPath: '/admin/expenses'
+      preLoaderRoute: typeof AdminExpensesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/classes': {
       id: '/admin/classes'
       path: '/classes'
@@ -722,6 +741,7 @@ interface AdminRouteChildren {
   AdminAnalyticsRoute: typeof AdminAnalyticsRoute
   AdminCalendarRoute: typeof AdminCalendarRoute
   AdminClassesRoute: typeof AdminClassesRoute
+  AdminExpensesRoute: typeof AdminExpensesRoute
   AdminFeesRoute: typeof AdminFeesRoute
   AdminLogsRoute: typeof AdminLogsRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
@@ -736,6 +756,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAnalyticsRoute: AdminAnalyticsRoute,
   AdminCalendarRoute: AdminCalendarRoute,
   AdminClassesRoute: AdminClassesRoute,
+  AdminExpensesRoute: AdminExpensesRoute,
   AdminFeesRoute: AdminFeesRoute,
   AdminLogsRoute: AdminLogsRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,

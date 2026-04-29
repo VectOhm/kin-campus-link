@@ -132,9 +132,10 @@ export interface Notification {
   id: string;
   title: string;
   message: string;
-  audience: "school" | "class" | "student";
+  audience: "school" | "class" | "student" | "teachers" | "teacher";
   classId?: string;
   studentId?: string;
+  teacherId?: string;
   senderId: string;
   senderRole: Role;
   createdAt: string;
