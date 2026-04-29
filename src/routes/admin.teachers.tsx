@@ -25,7 +25,9 @@ function TeachersPage() {
         users: s.users.filter((u) => u.teacherId !== id),
         classSubjectAssignments: s.classSubjectAssignments.filter((c) => c.teacherId !== id),
         timetable: s.timetable.filter((t) => t.teacherId !== id),
-        classes: s.classes.map((c) => (c.classTeacherId === id ? { ...c, classTeacherId: undefined } : c)),
+        classes: s.classes.map((c) =>
+          c.classTeacherId === id ? { ...c, classTeacherId: undefined } : c,
+        ),
       }),
       { action: "removed teacher", entity: id },
     );
@@ -73,7 +75,11 @@ function TeachersPage() {
                       <div className="flex flex-wrap gap-1">
                         {t.subjects.map((sid) => {
                           const s = state.subjects.find((x) => x.id === sid);
-                          return s ? <Badge key={sid} tone="info">{s.code}</Badge> : null;
+                          return s ? (
+                            <Badge key={sid} tone="info">
+                              {s.code}
+                            </Badge>
+                          ) : null;
                         })}
                       </div>
                     </td>
@@ -81,17 +87,29 @@ function TeachersPage() {
                       <div className="flex flex-wrap gap-1">
                         {t.classes.map((cid) => {
                           const c = state.classes.find((x) => x.id === cid);
-                          return c ? <Badge key={cid} tone="muted">{c.grade}</Badge> : null;
+                          return c ? (
+                            <Badge key={cid} tone="muted">
+                              {c.grade}
+                            </Badge>
+                          ) : null;
                         })}
                       </div>
                     </td>
                     <td className="text-xs text-muted-foreground">{t.joiningDate}</td>
                     <td>
                       <div className="flex gap-1">
-                        <button onClick={() => setEditing(t)} className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground" title="Edit">
+                        <button
+                          onClick={() => setEditing(t)}
+                          className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
+                          title="Edit"
+                        >
                           <Pencil className="h-3.5 w-3.5" />
                         </button>
-                        <button onClick={() => remove(t.id)} className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive" title="Remove">
+                        <button
+                          onClick={() => remove(t.id)}
+                          className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                          title="Remove"
+                        >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
                       </div>
@@ -138,7 +156,9 @@ function TeacherModal({ teacher, onClose }: { teacher?: Teacher; onClose: () => 
 
           // Update teacher record
           const teachers = s.teachers.map((t) =>
-            t.id === tid ? { ...t, name: form.name, email: form.email, phone: form.phone, subjects, classes } : t,
+            t.id === tid
+              ? { ...t, name: form.name, email: form.email, phone: form.phone, subjects, classes }
+              : t,
           );
 
           // Reconcile classSubjectAssignments:
@@ -153,12 +173,19 @@ function TeacherModal({ teacher, onClose }: { teacher?: Teacher; onClose: () => 
             .filter((k) => !existingKeys.has(k))
             .map((k) => {
               const [classId, subjectId] = k.split("|");
-              return { id: `csa_${classId}_${subjectId}_${tid}`, classId, subjectId, teacherId: tid };
+              return {
+                id: `csa_${classId}_${subjectId}_${tid}`,
+                classId,
+                subjectId,
+                teacherId: tid,
+              };
             });
           const classSubjectAssignments = [...remaining, ...additions];
 
           // Reconcile timetable slots: drop slots that no longer match a valid (class,subject,teacher=tid)
-          const validKeys = new Set(classSubjectAssignments.map((c) => `${c.classId}|${c.subjectId}|${c.teacherId}`));
+          const validKeys = new Set(
+            classSubjectAssignments.map((c) => `${c.classId}|${c.subjectId}|${c.teacherId}`),
+          );
           const timetable = s.timetable.filter((slot) => {
             if (slot.teacherId !== tid) return true;
             return validKeys.has(`${slot.classId}|${slot.subjectId}|${tid}`);
@@ -185,18 +212,41 @@ function TeacherModal({ teacher, onClose }: { teacher?: Teacher; onClose: () => 
         ...s,
         teachers: [
           ...s.teachers,
-          { id, name: form.name, email: form.email, phone: form.phone, subjects, classes, joiningDate: new Date().toISOString().split("T")[0] },
+          {
+            id,
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            subjects,
+            classes,
+            joiningDate: new Date().toISOString().split("T")[0],
+          },
         ],
         users: [
           ...s.users,
-          { id: `u_t_${id}`, email: form.email, password: "teacher", role: "teacher", name: form.name, teacherId: id },
+          {
+            id: `u_t_${id}`,
+            email: form.email,
+            password: "teacher",
+            role: "teacher",
+            name: form.name,
+            teacherId: id,
+          },
         ],
         classSubjectAssignments: [
           ...s.classSubjectAssignments,
           ...classes.flatMap((cid) =>
             subjects
-              .filter((sid) => !s.classSubjectAssignments.some((c) => c.classId === cid && c.subjectId === sid))
-              .map((sid) => ({ id: `csa_${cid}_${sid}_${id}`, classId: cid, subjectId: sid, teacherId: id })),
+              .filter(
+                (sid) =>
+                  !s.classSubjectAssignments.some((c) => c.classId === cid && c.subjectId === sid),
+              )
+              .map((sid) => ({
+                id: `csa_${cid}_${sid}_${id}`,
+                classId: cid,
+                subjectId: sid,
+                teacherId: id,
+              })),
           ),
         ],
       }),
@@ -207,10 +257,26 @@ function TeacherModal({ teacher, onClose }: { teacher?: Teacher; onClose: () => 
   }
 
   return (
-    <Modal open onClose={onClose} title={isEdit ? `Edit ${teacher!.name}` : "Add teacher"} subtitle="Subjects & class assignments cascade to timetable">
+    <Modal
+      open
+      onClose={onClose}
+      title={isEdit ? `Edit ${teacher!.name}` : "Add teacher"}
+      subtitle="Subjects & class assignments cascade to timetable"
+    >
       <form onSubmit={submit} className="grid grid-cols-2 gap-3">
-        <Field label="Name" value={form.name} onChange={(v) => setForm({ ...form, name: v })} required />
-        <Field label="Email" type="email" value={form.email} onChange={(v) => setForm({ ...form, email: v })} required />
+        <Field
+          label="Name"
+          value={form.name}
+          onChange={(v) => setForm({ ...form, name: v })}
+          required
+        />
+        <Field
+          label="Email"
+          type="email"
+          value={form.email}
+          onChange={(v) => setForm({ ...form, email: v })}
+          required
+        />
         <Field label="Phone" value={form.phone} onChange={(v) => setForm({ ...form, phone: v })} />
         <MultiToggle
           label="Subjects"

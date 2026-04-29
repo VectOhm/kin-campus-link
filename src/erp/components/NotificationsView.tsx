@@ -22,7 +22,15 @@ interface Props {
   receiveOnly?: boolean;
 }
 
-export function NotificationsView({ audienceOptions, forUserId, allowedClassIds, allowedStudentIds, senderRole, title, receiveOnly }: Props) {
+export function NotificationsView({
+  audienceOptions,
+  forUserId,
+  allowedClassIds,
+  allowedStudentIds,
+  senderRole,
+  title,
+  receiveOnly,
+}: Props) {
   const { state, update, currentUser } = useStore();
   const [open, setOpen] = useState(false);
 
@@ -50,7 +58,9 @@ export function NotificationsView({ audienceOptions, forUserId, allowedClassIds,
     update((s) => ({
       ...s,
       notifications: s.notifications.map((n) =>
-        visible.some((v) => v.id === n.id) && !n.readBy.includes(forUserId) ? { ...n, readBy: [...n.readBy, forUserId] } : n,
+        visible.some((v) => v.id === n.id) && !n.readBy.includes(forUserId)
+          ? { ...n, readBy: [...n.readBy, forUserId] }
+          : n,
       ),
     }));
   }
@@ -63,12 +73,18 @@ export function NotificationsView({ audienceOptions, forUserId, allowedClassIds,
         actions={
           <div className="flex gap-2">
             {forUserId && (
-              <button onClick={markAllRead} className="rounded-md border border-border px-3 py-1.5 text-xs hover:bg-muted">
+              <button
+                onClick={markAllRead}
+                className="rounded-md border border-border px-3 py-1.5 text-xs hover:bg-muted"
+              >
                 Mark all read
               </button>
             )}
             {!receiveOnly && (
-              <button onClick={() => setOpen(true)} className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90">
+              <button
+                onClick={() => setOpen(true)}
+                className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+              >
                 <Plus className="h-3.5 w-3.5" /> Send notification
               </button>
             )}
@@ -91,13 +107,29 @@ export function NotificationsView({ audienceOptions, forUserId, allowedClassIds,
                 >
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex flex-wrap items-center gap-2">
-                      <Badge tone={n.audience === "school" ? "info" : n.audience === "class" ? "warning" : "muted"}>{n.audience}</Badge>
+                      <Badge
+                        tone={
+                          n.audience === "school"
+                            ? "info"
+                            : n.audience === "class"
+                              ? "warning"
+                              : "muted"
+                        }
+                      >
+                        {n.audience}
+                      </Badge>
                       {cls && <span className="text-[11px] text-muted-foreground">{cls.name}</span>}
-                      {targetTeacher && <span className="text-[11px] text-muted-foreground">→ {targetTeacher.name}</span>}
+                      {targetTeacher && (
+                        <span className="text-[11px] text-muted-foreground">
+                          → {targetTeacher.name}
+                        </span>
+                      )}
                       <span className="text-sm font-medium">{n.title}</span>
                       {isUnread && <span className="h-1.5 w-1.5 rounded-full bg-accent" />}
                     </div>
-                    <span className="text-[10px] text-muted-foreground">{new Date(n.createdAt).toLocaleString()}</span>
+                    <span className="text-[10px] text-muted-foreground">
+                      {new Date(n.createdAt).toLocaleString()}
+                    </span>
                   </div>
                   <p className="mt-1 text-xs text-muted-foreground">{n.message}</p>
                 </div>
@@ -120,7 +152,19 @@ export function NotificationsView({ audienceOptions, forUserId, allowedClassIds,
   );
 }
 
-function SendModal({ onClose, audienceOptions, allowedClassIds, allowedStudentIds, senderRole }: { onClose: () => void; audienceOptions: Audience[]; allowedClassIds?: string[]; allowedStudentIds?: string[]; senderRole: Role }) {
+function SendModal({
+  onClose,
+  audienceOptions,
+  allowedClassIds,
+  allowedStudentIds,
+  senderRole,
+}: {
+  onClose: () => void;
+  audienceOptions: Audience[];
+  allowedClassIds?: string[];
+  allowedStudentIds?: string[];
+  senderRole: Role;
+}) {
   const { state, update, currentUser } = useStore();
   const [audience, setAudience] = useState<Audience>(audienceOptions[0]);
   const [classId, setClassId] = useState("");
@@ -129,22 +173,40 @@ function SendModal({ onClose, audienceOptions, allowedClassIds, allowedStudentId
   const [title, setTitle] = useState("");
   const [message, setMessage] = useState("");
 
-  const classes = allowedClassIds ? state.classes.filter((c) => allowedClassIds.includes(c.id)) : state.classes;
-  const students = allowedStudentIds ? state.students.filter((s) => allowedStudentIds.includes(s.id)) : state.students;
+  const classes = allowedClassIds
+    ? state.classes.filter((c) => allowedClassIds.includes(c.id))
+    : state.classes;
+  const students = allowedStudentIds
+    ? state.students.filter((s) => allowedStudentIds.includes(s.id))
+    : state.students;
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!title || !message) { toast.error("Title and message required"); return; }
-    if (audience === "class" && !classId) { toast.error("Pick a class"); return; }
-    if (audience === "student" && !studentId) { toast.error("Pick a student"); return; }
-    if (audience === "teacher" && !teacherId) { toast.error("Pick a teacher"); return; }
+    if (!title || !message) {
+      toast.error("Title and message required");
+      return;
+    }
+    if (audience === "class" && !classId) {
+      toast.error("Pick a class");
+      return;
+    }
+    if (audience === "student" && !studentId) {
+      toast.error("Pick a student");
+      return;
+    }
+    if (audience === "teacher" && !teacherId) {
+      toast.error("Pick a teacher");
+      return;
+    }
     update(
       (s) => ({
         ...s,
         notifications: [
           {
             id: `nf_${Date.now()}`,
-            title, message, audience,
+            title,
+            message,
+            audience,
             classId: audience === "class" ? classId : undefined,
             studentId: audience === "student" ? studentId : undefined,
             teacherId: audience === "teacher" ? teacherId : undefined,
@@ -173,18 +235,51 @@ function SendModal({ onClose, audienceOptions, allowedClassIds, allowedStudentId
   return (
     <Modal open onClose={onClose} title="Send notification">
       <form onSubmit={submit} className="grid grid-cols-2 gap-3">
-        <SelectField label="Audience" value={audience} onChange={(v) => setAudience(v as Audience)} options={audienceOptions.map((a) => [a, audienceLabel[a]])} />
+        <SelectField
+          label="Audience"
+          value={audience}
+          onChange={(v) => setAudience(v as Audience)}
+          options={audienceOptions.map((a) => [a, audienceLabel[a]])}
+        />
         {audience === "class" && (
-          <SelectField label="Class" value={classId} onChange={setClassId} options={[["", "Select class"], ...classes.map((c) => [c.id, c.name] as [string, string])]} />
+          <SelectField
+            label="Class"
+            value={classId}
+            onChange={setClassId}
+            options={[
+              ["", "Select class"],
+              ...classes.map((c) => [c.id, c.name] as [string, string]),
+            ]}
+          />
         )}
         {audience === "student" && (
-          <SelectField label="Student" value={studentId} onChange={setStudentId} options={[["", "Select student"], ...students.map((s) => [s.id, s.name] as [string, string])]} />
+          <SelectField
+            label="Student"
+            value={studentId}
+            onChange={setStudentId}
+            options={[
+              ["", "Select student"],
+              ...students.map((s) => [s.id, s.name] as [string, string]),
+            ]}
+          />
         )}
         {audience === "teacher" && (
-          <SelectField label="Teacher" value={teacherId} onChange={setTeacherId} options={[["", "Select teacher"], ...state.teachers.map((t) => [t.id, t.name] as [string, string])]} />
+          <SelectField
+            label="Teacher"
+            value={teacherId}
+            onChange={setTeacherId}
+            options={[
+              ["", "Select teacher"],
+              ...state.teachers.map((t) => [t.id, t.name] as [string, string]),
+            ]}
+          />
         )}
-        <div className="col-span-2"><Field label="Title" value={title} onChange={setTitle} /></div>
-        <div className="col-span-2"><TextareaField label="Message" value={message} onChange={setMessage} rows={4} /></div>
+        <div className="col-span-2">
+          <Field label="Title" value={title} onChange={setTitle} />
+        </div>
+        <div className="col-span-2">
+          <TextareaField label="Message" value={message} onChange={setMessage} rows={4} />
+        </div>
         <FormActions onCancel={onClose} submitLabel="Send" />
       </form>
     </Modal>

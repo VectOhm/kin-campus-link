@@ -89,9 +89,7 @@ export function buildSeed(): ERPState {
   const classSubjectAssignments: ClassSubjectAssignment[] = [];
   classes.forEach((c) => {
     subjects.forEach((s) => {
-      const t = teachers.find(
-        (tc) => tc.classes.includes(c.id) && tc.subjects.includes(s.id),
-      );
+      const t = teachers.find((tc) => tc.classes.includes(c.id) && tc.subjects.includes(s.id));
       if (t) {
         classSubjectAssignments.push({
           id: `csa_${c.id}_${s.id}`,
@@ -122,9 +120,30 @@ export function buildSeed(): ERPState {
       baseFare: 800,
       pricePerKm: 25,
       stops: [
-        { id: "bs_1", name: "Sector 12", pickupTime: "07:10", dropTime: "15:30", destination: "North Sector 12", distanceKm: 4 },
-        { id: "bs_2", name: "Civic Center", pickupTime: "07:25", dropTime: "15:15", destination: "Civic Center", distanceKm: 7 },
-        { id: "bs_3", name: "Market Square", pickupTime: "07:40", dropTime: "15:00", destination: "Market Square", distanceKm: 10 },
+        {
+          id: "bs_1",
+          name: "Sector 12",
+          pickupTime: "07:10",
+          dropTime: "15:30",
+          destination: "North Sector 12",
+          distanceKm: 4,
+        },
+        {
+          id: "bs_2",
+          name: "Civic Center",
+          pickupTime: "07:25",
+          dropTime: "15:15",
+          destination: "Civic Center",
+          distanceKm: 7,
+        },
+        {
+          id: "bs_3",
+          name: "Market Square",
+          pickupTime: "07:40",
+          dropTime: "15:00",
+          destination: "Market Square",
+          distanceKm: 10,
+        },
       ],
     },
     {
@@ -136,9 +155,30 @@ export function buildSeed(): ERPState {
       baseFare: 800,
       pricePerKm: 30,
       stops: [
-        { id: "bs_4", name: "Lake View", pickupTime: "07:00", dropTime: "15:35", destination: "Lake View", distanceKm: 5 },
-        { id: "bs_5", name: "Rose Garden", pickupTime: "07:15", dropTime: "15:20", destination: "Rose Garden", distanceKm: 8 },
-        { id: "bs_6", name: "Old Town", pickupTime: "07:30", dropTime: "15:05", destination: "Old Town", distanceKm: 12 },
+        {
+          id: "bs_4",
+          name: "Lake View",
+          pickupTime: "07:00",
+          dropTime: "15:35",
+          destination: "Lake View",
+          distanceKm: 5,
+        },
+        {
+          id: "bs_5",
+          name: "Rose Garden",
+          pickupTime: "07:15",
+          dropTime: "15:20",
+          destination: "Rose Garden",
+          distanceKm: 8,
+        },
+        {
+          id: "bs_6",
+          name: "Old Town",
+          pickupTime: "07:30",
+          dropTime: "15:05",
+          destination: "Old Town",
+          distanceKm: 12,
+        },
       ],
     },
     {
@@ -150,15 +190,61 @@ export function buildSeed(): ERPState {
       baseFare: 1000,
       pricePerKm: 35,
       stops: [
-        { id: "bs_7", name: "Hill Top", pickupTime: "07:05", dropTime: "15:40", destination: "Hill Top", distanceKm: 9 },
-        { id: "bs_8", name: "Green Park", pickupTime: "07:20", dropTime: "15:25", destination: "Green Park", distanceKm: 6 },
+        {
+          id: "bs_7",
+          name: "Hill Top",
+          pickupTime: "07:05",
+          dropTime: "15:40",
+          destination: "Hill Top",
+          distanceKm: 9,
+        },
+        {
+          id: "bs_8",
+          name: "Green Park",
+          pickupTime: "07:20",
+          dropTime: "15:25",
+          destination: "Green Park",
+          distanceKm: 6,
+        },
       ],
     },
   ];
 
   // Students — 4 per class = 40 students
-  const firstNames = ["Aarav", "Vivaan", "Aditya", "Vihaan", "Sai", "Arjun", "Reyansh", "Krishna", "Ishaan", "Rohan", "Anaya", "Diya", "Saanvi", "Aadhya", "Myra", "Sara", "Riya", "Pari", "Anika", "Navya"];
-  const lastNames = ["Sharma", "Verma", "Patel", "Gupta", "Reddy", "Khan", "Mehta", "Singh", "Nair", "Joshi"];
+  const firstNames = [
+    "Aarav",
+    "Vivaan",
+    "Aditya",
+    "Vihaan",
+    "Sai",
+    "Arjun",
+    "Reyansh",
+    "Krishna",
+    "Ishaan",
+    "Rohan",
+    "Anaya",
+    "Diya",
+    "Saanvi",
+    "Aadhya",
+    "Myra",
+    "Sara",
+    "Riya",
+    "Pari",
+    "Anika",
+    "Navya",
+  ];
+  const lastNames = [
+    "Sharma",
+    "Verma",
+    "Patel",
+    "Gupta",
+    "Reddy",
+    "Khan",
+    "Mehta",
+    "Singh",
+    "Nair",
+    "Joshi",
+  ];
 
   const students: Student[] = [];
   let sIdx = 0;
@@ -175,13 +261,25 @@ export function buildSeed(): ERPState {
         parentName: `${["Mr.", "Mrs."][i % 2]} ${ln}`,
         parentPhone: `+91 90${(11110000 + sIdx).toString()}`,
         parentEmail: `parent.${fn.toLowerCase()}.${ln.toLowerCase()}@mail.com`,
-        dob: iso(new Date(today.getFullYear() - (5 + c.grade), (sIdx % 12), ((sIdx % 27) + 1))),
+        dob: iso(new Date(today.getFullYear() - (5 + c.grade), sIdx % 12, (sIdx % 27) + 1)),
         address: `${10 + sIdx} ${["Park St", "Lake Rd", "Hill Ln", "Garden Ave"][i % 4]}`,
         admissionDate: daysAgo(180 + sIdx),
         busRouteId: i < 2 ? busRoutes[i % busRoutes.length].id : undefined,
         documents: [
-          { id: `doc_${sid}_1`, name: "Birth Certificate.pdf", type: "pdf", uploadedAt: daysAgo(180), url: "#" },
-          { id: `doc_${sid}_2`, name: "Previous Marksheet.pdf", type: "pdf", uploadedAt: daysAgo(180), url: "#" },
+          {
+            id: `doc_${sid}_1`,
+            name: "Birth Certificate.pdf",
+            type: "pdf",
+            uploadedAt: daysAgo(180),
+            url: "#",
+          },
+          {
+            id: `doc_${sid}_2`,
+            name: "Previous Marksheet.pdf",
+            type: "pdf",
+            uploadedAt: daysAgo(180),
+            url: "#",
+          },
         ],
       });
       sIdx++;
@@ -192,7 +290,9 @@ export function buildSeed(): ERPState {
   const feePayments: FeePayment[] = [];
   const yr = `${today.getFullYear()}-${today.getFullYear() + 1}`;
   students.forEach((st, i) => {
-    const fs = feeStructures.find((f) => f.grade === classes.find((c) => c.id === st.classId)!.grade)!;
+    const fs = feeStructures.find(
+      (f) => f.grade === classes.find((c) => c.id === st.classId)!.grade,
+    )!;
     feePayments.push({
       id: `fp_${st.id}_adm`,
       studentId: st.id,
@@ -273,10 +373,33 @@ export function buildSeed(): ERPState {
 
   // Calendar
   const calendar: CalendarEvent[] = [
-    { id: "cal_1", title: "Independence Day", date: `${today.getFullYear()}-08-15`, type: "holiday" },
-    { id: "cal_2", title: "Diwali Break", date: `${today.getFullYear()}-11-01`, endDate: `${today.getFullYear()}-11-05`, type: "holiday" },
-    { id: "cal_3", title: "Annual Sports Day", date: daysAhead(20), type: "event", description: "All grades participate" },
-    { id: "cal_4", title: "Mid-Term Exams", date: daysAhead(45), endDate: daysAhead(55), type: "exam" },
+    {
+      id: "cal_1",
+      title: "Independence Day",
+      date: `${today.getFullYear()}-08-15`,
+      type: "holiday",
+    },
+    {
+      id: "cal_2",
+      title: "Diwali Break",
+      date: `${today.getFullYear()}-11-01`,
+      endDate: `${today.getFullYear()}-11-05`,
+      type: "holiday",
+    },
+    {
+      id: "cal_3",
+      title: "Annual Sports Day",
+      date: daysAhead(20),
+      type: "event",
+      description: "All grades participate",
+    },
+    {
+      id: "cal_4",
+      title: "Mid-Term Exams",
+      date: daysAhead(45),
+      endDate: daysAhead(55),
+      type: "exam",
+    },
     { id: "cal_5", title: "Parent-Teacher Meeting", date: daysAhead(10), type: "event" },
   ];
 
@@ -390,7 +513,13 @@ export function buildSeed(): ERPState {
 
   // Users — admin + one user per teacher + one parent per first student of each class for demo
   const users: User[] = [
-    { id: "u_admin", email: "admin@school.edu", password: "admin", role: "admin", name: "Principal Sharma" },
+    {
+      id: "u_admin",
+      email: "admin@school.edu",
+      password: "admin",
+      role: "admin",
+      name: "Principal Sharma",
+    },
     ...teachers.map((t, i) => ({
       id: `u_t_${t.id}`,
       email: i === 0 ? "teacher@school.edu" : t.email,
@@ -441,7 +570,8 @@ export function buildSeed(): ERPState {
     const csaTeacherIds = Array.from(
       new Set(classSubjectAssignments.filter((a) => a.classId === c.id).map((a) => a.teacherId)),
     );
-    if (c.classTeacherId && !csaTeacherIds.includes(c.classTeacherId)) csaTeacherIds.push(c.classTeacherId);
+    if (c.classTeacherId && !csaTeacherIds.includes(c.classTeacherId))
+      csaTeacherIds.push(c.classTeacherId);
     const teacherUserIds = csaTeacherIds
       .map((tid) => users.find((u) => u.teacherId === tid)?.id)
       .filter((x): x is string => !!x);

@@ -28,20 +28,32 @@ function StudentsPage() {
       s.rollNo.toLowerCase().includes(q.toLowerCase()) ||
       s.parentName.toLowerCase().includes(q.toLowerCase());
     const matchBus =
-      busFilter === "all" ||
-      (busFilter === "none" ? !s.busRouteId : s.busRouteId === busFilter);
+      busFilter === "all" || (busFilter === "none" ? !s.busRouteId : s.busRouteId === busFilter);
     const matchFee =
       feeFilter === "all" ||
       (feeFilter === "pending"
         ? state.feePayments.some((p) => p.studentId === s.id && p.status === "pending")
         : state.feePayments.filter((p) => p.studentId === s.id).every((p) => p.status === "paid"));
     // Gender heuristic from first name list (simple check)
-    const femaleNames = ["Anaya", "Diya", "Saanvi", "Aadhya", "Myra", "Sara", "Riya", "Pari", "Anika", "Navya"];
+    const femaleNames = [
+      "Anaya",
+      "Diya",
+      "Saanvi",
+      "Aadhya",
+      "Myra",
+      "Sara",
+      "Riya",
+      "Pari",
+      "Anika",
+      "Navya",
+    ];
     const isFemale = femaleNames.some((n) => s.name.startsWith(n));
     const matchGender = gender === "all" || (gender === "female" ? isFemale : !isFemale);
     const matchAdmFrom = !admittedFrom || s.admissionDate >= admittedFrom;
     const matchAdmTo = !admittedTo || s.admissionDate <= admittedTo;
-    return matchClass && matchQ && matchBus && matchFee && matchGender && matchAdmFrom && matchAdmTo;
+    return (
+      matchClass && matchQ && matchBus && matchFee && matchGender && matchAdmFrom && matchAdmTo
+    );
   });
 
   function remove(id: string) {
@@ -92,27 +104,70 @@ function StudentsPage() {
           >
             <option value="all">All classes</option>
             {state.classes.map((c) => (
-              <option key={c.id} value={c.id}>{c.name}</option>
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
             ))}
           </select>
-          <select value={busFilter} onChange={(e) => setBusFilter(e.target.value)} className="rounded-md border border-input bg-background px-2 py-1.5 text-sm">
+          <select
+            value={busFilter}
+            onChange={(e) => setBusFilter(e.target.value)}
+            className="rounded-md border border-input bg-background px-2 py-1.5 text-sm"
+          >
             <option value="all">Any transport</option>
             <option value="none">No bus</option>
-            {state.busRoutes.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
+            {state.busRoutes.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.name}
+              </option>
+            ))}
           </select>
-          <select value={feeFilter} onChange={(e) => setFeeFilter(e.target.value as typeof feeFilter)} className="rounded-md border border-input bg-background px-2 py-1.5 text-sm">
+          <select
+            value={feeFilter}
+            onChange={(e) => setFeeFilter(e.target.value as typeof feeFilter)}
+            className="rounded-md border border-input bg-background px-2 py-1.5 text-sm"
+          >
             <option value="all">Any fee status</option>
             <option value="paid">All cleared</option>
             <option value="pending">Has pending</option>
           </select>
-          <select value={gender} onChange={(e) => setGender(e.target.value as typeof gender)} className="rounded-md border border-input bg-background px-2 py-1.5 text-sm">
+          <select
+            value={gender}
+            onChange={(e) => setGender(e.target.value as typeof gender)}
+            className="rounded-md border border-input bg-background px-2 py-1.5 text-sm"
+          >
             <option value="all">Any gender</option>
             <option value="female">Female</option>
             <option value="male">Male</option>
           </select>
-          <input type="date" value={admittedFrom} onChange={(e) => setAdmittedFrom(e.target.value)} title="Admitted from" className="rounded-md border border-input bg-background px-2 py-1.5 text-sm" />
-          <input type="date" value={admittedTo} onChange={(e) => setAdmittedTo(e.target.value)} title="Admitted to" className="rounded-md border border-input bg-background px-2 py-1.5 text-sm" />
-          <button onClick={() => { setQ(""); setClassFilter("all"); setBusFilter("all"); setFeeFilter("all"); setGender("all"); setAdmittedFrom(""); setAdmittedTo(""); }} className="rounded-md border border-border px-2.5 py-1.5 text-xs hover:bg-muted">Clear</button>
+          <input
+            type="date"
+            value={admittedFrom}
+            onChange={(e) => setAdmittedFrom(e.target.value)}
+            title="Admitted from"
+            className="rounded-md border border-input bg-background px-2 py-1.5 text-sm"
+          />
+          <input
+            type="date"
+            value={admittedTo}
+            onChange={(e) => setAdmittedTo(e.target.value)}
+            title="Admitted to"
+            className="rounded-md border border-input bg-background px-2 py-1.5 text-sm"
+          />
+          <button
+            onClick={() => {
+              setQ("");
+              setClassFilter("all");
+              setBusFilter("all");
+              setFeeFilter("all");
+              setGender("all");
+              setAdmittedFrom("");
+              setAdmittedTo("");
+            }}
+            className="rounded-md border border-border px-2.5 py-1.5 text-xs hover:bg-muted"
+          >
+            Clear
+          </button>
         </div>
 
         {filtered.length === 0 ? (
@@ -143,10 +198,19 @@ function StudentsPage() {
                       <td>{cls?.name}</td>
                       <td>{s.parentName}</td>
                       <td className="font-mono text-xs">{s.parentPhone}</td>
-                      <td>{route ? <Badge tone="info">{route.name.split("—")[0]}</Badge> : <span className="text-muted-foreground">—</span>}</td>
+                      <td>
+                        {route ? (
+                          <Badge tone="info">{route.name.split("—")[0]}</Badge>
+                        ) : (
+                          <span className="text-muted-foreground">—</span>
+                        )}
+                      </td>
                       <td className="text-xs text-muted-foreground">{s.admissionDate}</td>
                       <td>
-                        <button onClick={() => remove(s.id)} className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive">
+                        <button
+                          onClick={() => remove(s.id)}
+                          className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                        >
                           <Trash2 className="h-3.5 w-3.5" />
                         </button>
                       </td>
@@ -178,6 +242,8 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
     busRouteId: "",
   });
 
+  type FormType = typeof form;
+
   function submit(e: React.FormEvent) {
     e.preventDefault();
     if (!form.name || !form.parentName || !form.parentEmail) {
@@ -195,7 +261,9 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
           ...s.students,
           {
             id,
-            rollNo: form.rollNo || `${cls.grade}${(s.students.filter((x) => x.classId === cls.id).length + 1).toString().padStart(2, "0")}`,
+            rollNo:
+              form.rollNo ||
+              `${cls.grade}${(s.students.filter((x) => x.classId === cls.id).length + 1).toString().padStart(2, "0")}`,
             name: form.name,
             classId: form.classId,
             parentName: form.parentName,
@@ -236,7 +304,9 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
             type: q,
             amount: fs.quarterlyFee,
             status: "pending" as const,
-            dueDate: new Date(new Date().setMonth(new Date().getMonth() + qi * 3)).toISOString().split("T")[0],
+            dueDate: new Date(new Date().setMonth(new Date().getMonth() + qi * 3))
+              .toISOString()
+              .split("T")[0],
             academicYear: yr,
           })),
         ],
@@ -248,14 +318,19 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4" onClick={onClose}>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4"
+      onClick={onClose}
+    >
       <div
         className="w-full max-w-lg rounded-lg border border-border bg-card shadow-lg"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="border-b border-border px-5 py-3">
           <h3 className="text-sm font-semibold">New admission</h3>
-          <p className="text-xs text-muted-foreground">Creates student, parent login and fee schedule</p>
+          <p className="text-xs text-muted-foreground">
+            Creates student, parent login and fee schedule
+          </p>
         </div>
         <form onSubmit={submit} className="grid grid-cols-2 gap-3 p-5">
           {[
@@ -266,12 +341,33 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
             ["Parent email", "parentEmail", "email"],
             ["DOB", "dob", "date"],
           ].map(([label, key, type]) => (
-            <Field key={key} label={label} type={type} value={(form as any)[key]} onChange={(v) => setForm({ ...form, [key]: v })} />
+            <Field
+              key={key}
+              label={label}
+              type={type}
+              value={(form as FormType)[key]}
+              onChange={(v) => setForm({ ...form, [key]: v })}
+            />
           ))}
-          <SelectField label="Class" value={form.classId} onChange={(v) => setForm({ ...form, classId: v })} options={state.classes.map((c) => [c.id, c.name])} />
-          <SelectField label="Bus Route" value={form.busRouteId} onChange={(v) => setForm({ ...form, busRouteId: v })} options={[["", "None"], ...state.busRoutes.map((b) => [b.id, b.name] as [string, string])]} />
+          <SelectField
+            label="Class"
+            value={form.classId}
+            onChange={(v) => setForm({ ...form, classId: v })}
+            options={state.classes.map((c) => [c.id, c.name])}
+          />
+          <SelectField
+            label="Bus Route"
+            value={form.busRouteId}
+            onChange={(v) => setForm({ ...form, busRouteId: v })}
+            options={[
+              ["", "None"],
+              ...state.busRoutes.map((b) => [b.id, b.name] as [string, string]),
+            ]}
+          />
           <div className="col-span-2">
-            <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Address</label>
+            <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+              Address
+            </label>
             <input
               value={form.address}
               onChange={(e) => setForm({ ...form, address: e.target.value })}
@@ -279,8 +375,19 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
             />
           </div>
           <div className="col-span-2 flex justify-end gap-2 pt-2">
-            <button type="button" onClick={onClose} className="rounded-md px-3 py-1.5 text-xs hover:bg-muted">Cancel</button>
-            <button type="submit" className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90">Admit student</button>
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-md px-3 py-1.5 text-xs hover:bg-muted"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              Admit student
+            </button>
           </div>
         </form>
       </div>
@@ -288,10 +395,22 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
   );
 }
 
-export function Field({ label, type = "text", value, onChange }: { label: string; type?: string; value: string; onChange: (v: string) => void }) {
+export function Field({
+  label,
+  type = "text",
+  value,
+  onChange,
+}: {
+  label: string;
+  type?: string;
+  value: string;
+  onChange: (v: string) => void;
+}) {
   return (
     <div>
-      <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{label}</label>
+      <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+        {label}
+      </label>
       <input
         type={type}
         value={value}
@@ -302,17 +421,31 @@ export function Field({ label, type = "text", value, onChange }: { label: string
   );
 }
 
-export function SelectField({ label, value, onChange, options }: { label: string; value: string; onChange: (v: string) => void; options: [string, string][] }) {
+export function SelectField({
+  label,
+  value,
+  onChange,
+  options,
+}: {
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  options: [string, string][];
+}) {
   return (
     <div>
-      <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">{label}</label>
+      <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+        {label}
+      </label>
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
         className="mt-1 w-full rounded-md border border-input bg-background px-2.5 py-1.5 text-sm focus:border-ring focus:outline-none focus:ring-1 focus:ring-ring"
       >
         {options.map(([v, l]) => (
-          <option key={v} value={v}>{l}</option>
+          <option key={v} value={v}>
+            {l}
+          </option>
         ))}
       </select>
     </div>

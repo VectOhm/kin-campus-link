@@ -17,7 +17,11 @@ export interface ChatBotProps {
 
 export function ChatBot({ title, placeholder, hints, onSubmit }: ChatBotProps) {
   const [history, setHistory] = useState<ChatMessage[]>([
-    { role: "bot", text: `Hi! I'm your ${title.toLowerCase()} assistant. ${hints[0] ?? ""}`, ts: Date.now() },
+    {
+      role: "bot",
+      text: `Hi! I'm your ${title.toLowerCase()} assistant. ${hints[0] ?? ""}`,
+      ts: Date.now(),
+    },
   ]);
   const [draft, setDraft] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -39,16 +43,25 @@ export function ChatBot({ title, placeholder, hints, onSubmit }: ChatBotProps) {
     <div className="flex h-[420px] flex-col rounded-md border border-border bg-card">
       <div className="flex items-center gap-2 border-b border-border px-3 py-2">
         <Bot className="h-4 w-4 text-accent" />
-        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{title}</span>
+        <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          {title}
+        </span>
       </div>
       <div ref={scrollRef} className="flex-1 space-y-2 overflow-y-auto p-3">
         {history.map((m, i) => (
-          <div key={i} className={`flex gap-2 ${m.role === "user" ? "justify-end" : "justify-start"}`}>
+          <div
+            key={i}
+            className={`flex gap-2 ${m.role === "user" ? "justify-end" : "justify-start"}`}
+          >
             {m.role === "bot" && <Bot className="mt-1 h-3.5 w-3.5 shrink-0 text-accent" />}
-            <div className={`max-w-[80%] whitespace-pre-line rounded-md px-3 py-2 text-xs ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}>
+            <div
+              className={`max-w-[80%] whitespace-pre-line rounded-md px-3 py-2 text-xs ${m.role === "user" ? "bg-primary text-primary-foreground" : "bg-muted"}`}
+            >
               {m.text}
             </div>
-            {m.role === "user" && <UserIcon className="mt-1 h-3.5 w-3.5 shrink-0 text-muted-foreground" />}
+            {m.role === "user" && (
+              <UserIcon className="mt-1 h-3.5 w-3.5 shrink-0 text-muted-foreground" />
+            )}
           </div>
         ))}
       </div>
@@ -73,7 +86,10 @@ export function ChatBot({ title, placeholder, hints, onSubmit }: ChatBotProps) {
           placeholder={placeholder}
           className="flex-1 rounded border border-input bg-background px-2 py-1.5 text-sm"
         />
-        <button onClick={send} className="flex items-center gap-1 rounded bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground">
+        <button
+          onClick={send}
+          className="flex items-center gap-1 rounded bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground"
+        >
           <Send className="h-3 w-3" />
         </button>
       </div>

@@ -8,9 +8,30 @@ export const Route = createFileRoute("/login")({
 });
 
 const demos = [
-  { role: "admin", email: "admin@school.edu", password: "admin", icon: ShieldCheck, label: "Admin", desc: "Full system access" },
-  { role: "teacher", email: "teacher@school.edu", password: "teacher", icon: GraduationCap, label: "Teacher", desc: "Aarti Sharma — English/Hindi" },
-  { role: "parent", email: "parent@school.edu", password: "parent", icon: UserIcon, label: "Parent", desc: "Linked to first student" },
+  {
+    role: "admin",
+    email: "admin@school.edu",
+    password: "admin",
+    icon: ShieldCheck,
+    label: "Admin",
+    desc: "Full system access",
+  },
+  {
+    role: "teacher",
+    email: "teacher@school.edu",
+    password: "teacher",
+    icon: GraduationCap,
+    label: "Teacher",
+    desc: "Aarti Sharma — English/Hindi",
+  },
+  {
+    role: "parent",
+    email: "parent@school.edu",
+    password: "parent",
+    icon: UserIcon,
+    label: "Parent",
+    desc: "Linked to first student",
+  },
 ];
 
 function LoginPage() {
@@ -56,7 +77,8 @@ function LoginPage() {
             One platform for the whole school.
           </h1>
           <p className="mt-3 max-w-md text-sm text-primary-foreground/70">
-            Admissions, fees, homework, results, attendance, transport and notifications — for admins, teachers, students and parents.
+            Admissions, fees, homework, results, attendance, transport and notifications — for
+            admins, teachers, students and parents.
           </p>
           <div className="mt-8 grid grid-cols-3 gap-3 text-[11px]">
             {[
@@ -86,11 +108,15 @@ function LoginPage() {
             <span className="text-sm font-semibold">Brightwood K-10</span>
           </div>
           <h2 className="text-xl font-semibold tracking-tight">Sign in</h2>
-          <p className="mt-1 text-sm text-muted-foreground">Use a demo account or your credentials.</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Use a demo account or your credentials.
+          </p>
 
           <form onSubmit={submit} className="mt-6 space-y-3">
             <div>
-              <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Email</label>
+              <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                Email
+              </label>
               <input
                 type="email"
                 value={email}
@@ -100,7 +126,9 @@ function LoginPage() {
               />
             </div>
             <div>
-              <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">Password</label>
+              <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+                Password
+              </label>
               <input
                 type="password"
                 value={password}
@@ -119,7 +147,8 @@ function LoginPage() {
           </form>
 
           <div className="my-6 flex items-center gap-3 text-[10px] uppercase tracking-wider text-muted-foreground">
-            <div className="h-px flex-1 bg-border" /> One-click demo <div className="h-px flex-1 bg-border" />
+            <div className="h-px flex-1 bg-border" /> One-click demo{" "}
+            <div className="h-px flex-1 bg-border" />
           </div>
 
           <div className="grid gap-2">

@@ -24,7 +24,7 @@ function loadState(): ERPState {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
-  } catch {}
+  } catch {} // eslint-disable-line no-empty
   const fresh = buildSeed();
   localStorage.setItem(STORAGE_KEY, JSON.stringify(fresh));
   return fresh;
@@ -57,7 +57,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
   const persist = React.useCallback((s: ERPState) => {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
-    } catch {}
+    } catch {} // eslint-disable-line no-empty
   }, []);
 
   const update = React.useCallback<StoreContext["update"]>(
@@ -92,7 +92,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         setCurrentUser(u);
         try {
           localStorage.setItem(SESSION_KEY, JSON.stringify(u.id));
-        } catch {}
+        } catch {} // eslint-disable-line no-empty
       }
       return u ?? null;
     },
@@ -103,7 +103,7 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     setCurrentUser(null);
     try {
       localStorage.removeItem(SESSION_KEY);
-    } catch {}
+    } catch {} // eslint-disable-line no-empty
   }, []);
 
   const reset = React.useCallback(() => {
@@ -126,7 +126,8 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
         }
         if (u.role === "teacher" && u.teacherId) {
           const t = state.teachers.find((x) => x.id === u.teacherId);
-          if (n.audience === "class" && t && n.classId && t.classes.includes(n.classId)) return true;
+          if (n.audience === "class" && t && n.classId && t.classes.includes(n.classId))
+            return true;
         }
         if (u.role === "admin") return true;
         return false;

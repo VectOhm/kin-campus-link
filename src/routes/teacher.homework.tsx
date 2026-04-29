@@ -16,7 +16,9 @@ function HomeworkPage() {
   const [showBot, setShowBot] = useState(false);
   if (!teacher) return null;
   const t = teacher;
-  const list = state.homework.filter((h) => h.teacherId === t.id).sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const list = state.homework
+    .filter((h) => h.teacherId === t.id)
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   const myCsa = state.classSubjectAssignments.filter((a) => a.teacherId === t.id);
 
   function parseHomework(input: string): string {
@@ -41,22 +43,31 @@ function HomeworkPage() {
     let subjectId = "";
     for (const sub of state.subjects) {
       if (lower.includes(sub.name.toLowerCase()) || lower.includes(sub.code.toLowerCase())) {
-        if (t.subjects.includes(sub.id) && myCsa.some((a) => a.classId === classId && a.subjectId === sub.id)) {
+        if (
+          t.subjects.includes(sub.id) &&
+          myCsa.some((a) => a.classId === classId && a.subjectId === sub.id)
+        ) {
           subjectId = sub.id;
           break;
         }
       }
     }
-    if (!subjectId) return "✗ Which subject? You teach: " + t.subjects.map((sid) => state.subjects.find((s) => s.id === sid)?.name).join(", ");
+    if (!subjectId)
+      return (
+        "✗ Which subject? You teach: " +
+        t.subjects.map((sid) => state.subjects.find((s) => s.id === sid)?.name).join(", ")
+      );
 
     // due date — "due 2026-05-01", "due tomorrow", "due in 3 days", "due friday"
     let dueDate = new Date(Date.now() + 86400000 * 3).toISOString().split("T")[0];
     const dueIso = input.match(/due\s+(\d{4}-\d{2}-\d{2})/i);
     if (dueIso) dueDate = dueIso[1];
-    else if (/\btomorrow\b/i.test(input)) dueDate = new Date(Date.now() + 86400000).toISOString().split("T")[0];
+    else if (/\btomorrow\b/i.test(input))
+      dueDate = new Date(Date.now() + 86400000).toISOString().split("T")[0];
     else {
       const inDays = input.match(/due\s+in\s+(\d+)\s*days?/i);
-      if (inDays) dueDate = new Date(Date.now() + 86400000 * Number(inDays[1])).toISOString().split("T")[0];
+      if (inDays)
+        dueDate = new Date(Date.now() + 86400000 * Number(inDays[1])).toISOString().split("T")[0];
     }
 
     // title/description — text after ':' or after subject mention; quoted strings preferred
@@ -66,7 +77,10 @@ function HomeworkPage() {
     if (quoted) title = quoted[1];
     const colon = input.indexOf(":");
     if (colon !== -1) {
-      const tail = input.slice(colon + 1).replace(/due[^.]*$/i, "").trim();
+      const tail = input
+        .slice(colon + 1)
+        .replace(/due[^.]*$/i, "")
+        .trim();
       if (!title) {
         const dashIdx = tail.indexOf(" - ");
         if (dashIdx !== -1) {
@@ -85,7 +99,16 @@ function HomeworkPage() {
       (s) => ({
         ...s,
         homework: [
-          { id: `hw_${Date.now()}`, classId, subjectId, teacherId: t.id, title, description, dueDate, createdAt: new Date().toISOString() },
+          {
+            id: `hw_${Date.now()}`,
+            classId,
+            subjectId,
+            teacherId: t.id,
+            title,
+            description,
+            dueDate,
+            createdAt: new Date().toISOString(),
+          },
           ...s.homework,
         ],
       }),
@@ -98,13 +121,23 @@ function HomeworkPage() {
 
   return (
     <div>
-      <PageHeader title="Homework" subtitle={`${list.length} assignments`}
+      <PageHeader
+        title="Homework"
+        subtitle={`${list.length} assignments`}
         actions={
           <div className="flex gap-2">
-            <button onClick={() => setShowBot((v) => !v)} className="flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted">
+            <button
+              onClick={() => setShowBot((v) => !v)}
+              className="flex items-center gap-1.5 rounded-md border border-border px-3 py-1.5 text-xs font-medium hover:bg-muted"
+            >
               <Sparkles className="h-3.5 w-3.5" /> {showBot ? "Hide" : "Chat"} assistant
             </button>
-            <button onClick={() => setOpen(true)} className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"><Plus className="h-3.5 w-3.5" /> Assign</button>
+            <button
+              onClick={() => setOpen(true)}
+              className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              <Plus className="h-3.5 w-3.5" /> Assign
+            </button>
           </div>
         }
       />
@@ -120,10 +153,21 @@ function HomeworkPage() {
             onSubmit={parseHomework}
           />
         )}
-        {list.length === 0 ? <EmptyState message="No homework assigned yet" icon={BookOpen} /> : (
+        {list.length === 0 ? (
+          <EmptyState message="No homework assigned yet" icon={BookOpen} />
+        ) : (
           <Section title="All Assignments">
             <table className="data-table w-full">
-              <thead><tr><th>Posted</th><th>Class</th><th>Subject</th><th>Title</th><th>Due</th><th></th></tr></thead>
+              <thead>
+                <tr>
+                  <th>Posted</th>
+                  <th>Class</th>
+                  <th>Subject</th>
+                  <th>Title</th>
+                  <th>Due</th>
+                  <th></th>
+                </tr>
+              </thead>
               <tbody>
                 {list.map((h) => {
                   const cls = state.classes.find((c) => c.id === h.classId);
@@ -131,11 +175,30 @@ function HomeworkPage() {
                   return (
                     <tr key={h.id}>
                       <td className="font-mono text-xs">{h.createdAt.split("T")[0]}</td>
-                      <td><Badge tone="muted">{cls?.name}</Badge></td>
-                      <td><Badge tone="info">{sub?.code}</Badge></td>
-                      <td><div className="font-medium">{h.title}</div><div className="text-[11px] text-muted-foreground">{h.description}</div></td>
+                      <td>
+                        <Badge tone="muted">{cls?.name}</Badge>
+                      </td>
+                      <td>
+                        <Badge tone="info">{sub?.code}</Badge>
+                      </td>
+                      <td>
+                        <div className="font-medium">{h.title}</div>
+                        <div className="text-[11px] text-muted-foreground">{h.description}</div>
+                      </td>
                       <td className="font-mono text-xs">{h.dueDate}</td>
-                      <td><button onClick={() => update((s) => ({ ...s, homework: s.homework.filter((x) => x.id !== h.id) }), { action: "removed homework", entity: h.title })} className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"><Trash2 className="h-3.5 w-3.5" /></button></td>
+                      <td>
+                        <button
+                          onClick={() =>
+                            update(
+                              (s) => ({ ...s, homework: s.homework.filter((x) => x.id !== h.id) }),
+                              { action: "removed homework", entity: h.title },
+                            )
+                          }
+                          className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </td>
                     </tr>
                   );
                 })}
@@ -158,13 +221,33 @@ function AssignModal({ onClose }: { onClose: () => void }) {
   const [subjectId, setSubjectId] = useState(subjectsForClass[0]?.subjectId ?? "");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [dueDate, setDueDate] = useState(new Date(Date.now() + 86400000 * 3).toISOString().split("T")[0]);
+  const [dueDate, setDueDate] = useState(
+    new Date(Date.now() + 86400000 * 3).toISOString().split("T")[0],
+  );
 
   function submit(e: React.FormEvent) {
     e.preventDefault();
-    if (!title || !classId || !subjectId) { toast.error("Fill all fields"); return; }
+    if (!title || !classId || !subjectId) {
+      toast.error("Fill all fields");
+      return;
+    }
     update(
-      (s) => ({ ...s, homework: [{ id: `hw_${Date.now()}`, classId, subjectId, teacherId: teacher.id, title, description, dueDate, createdAt: new Date().toISOString() }, ...s.homework] }),
+      (s) => ({
+        ...s,
+        homework: [
+          {
+            id: `hw_${Date.now()}`,
+            classId,
+            subjectId,
+            teacherId: teacher.id,
+            title,
+            description,
+            dueDate,
+            createdAt: new Date().toISOString(),
+          },
+          ...s.homework,
+        ],
+      }),
       { action: "assigned homework", entity: title },
     );
     toast.success("Homework assigned");
@@ -174,10 +257,34 @@ function AssignModal({ onClose }: { onClose: () => void }) {
   return (
     <Modal open onClose={onClose} title="Assign homework">
       <form onSubmit={submit} className="grid grid-cols-2 gap-3">
-        <SelectField label="Class" value={classId} onChange={(v) => { setClassId(v); const s = myCsa.filter((a) => a.classId === v); setSubjectId(s[0]?.subjectId ?? ""); }} options={Array.from(new Set(myCsa.map((a) => a.classId))).map((cid) => [cid, state.classes.find((c) => c.id === cid)?.name ?? ""])} />
-        <SelectField label="Subject" value={subjectId} onChange={setSubjectId} options={subjectsForClass.map((a) => [a.subjectId, state.subjects.find((s) => s.id === a.subjectId)?.name ?? ""])} />
-        <div className="col-span-2"><Field label="Title" value={title} onChange={setTitle} /></div>
-        <div className="col-span-2"><TextareaField label="Description" value={description} onChange={setDescription} /></div>
+        <SelectField
+          label="Class"
+          value={classId}
+          onChange={(v) => {
+            setClassId(v);
+            const s = myCsa.filter((a) => a.classId === v);
+            setSubjectId(s[0]?.subjectId ?? "");
+          }}
+          options={Array.from(new Set(myCsa.map((a) => a.classId))).map((cid) => [
+            cid,
+            state.classes.find((c) => c.id === cid)?.name ?? "",
+          ])}
+        />
+        <SelectField
+          label="Subject"
+          value={subjectId}
+          onChange={setSubjectId}
+          options={subjectsForClass.map((a) => [
+            a.subjectId,
+            state.subjects.find((s) => s.id === a.subjectId)?.name ?? "",
+          ])}
+        />
+        <div className="col-span-2">
+          <Field label="Title" value={title} onChange={setTitle} />
+        </div>
+        <div className="col-span-2">
+          <TextareaField label="Description" value={description} onChange={setDescription} />
+        </div>
         <Field label="Due date" type="date" value={dueDate} onChange={setDueDate} />
         <FormActions onCancel={onClose} submitLabel="Assign" />
       </form>

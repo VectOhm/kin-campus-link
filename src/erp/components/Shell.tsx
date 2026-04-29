@@ -88,7 +88,11 @@ export function Shell() {
   if (!currentUser) return null;
 
   const nav =
-    currentUser.role === "admin" ? adminNav : currentUser.role === "teacher" ? teacherNav : parentNav;
+    currentUser.role === "admin"
+      ? adminNav
+      : currentUser.role === "teacher"
+        ? teacherNav
+        : parentNav;
 
   const unread = unreadNotifications(currentUser.id);
 
@@ -153,7 +157,11 @@ export function Shell() {
           )}
           <div className="flex items-center gap-2 rounded-md px-2 py-1.5">
             <div className="flex h-7 w-7 items-center justify-center rounded-full bg-muted text-xs font-semibold">
-              {currentUser.name.split(" ").map((p) => p[0]).slice(0, 2).join("")}
+              {currentUser.name
+                .split(" ")
+                .map((p) => p[0])
+                .slice(0, 2)
+                .join("")}
             </div>
             <div className="flex-1 overflow-hidden">
               <div className="truncate text-xs font-medium">{currentUser.name}</div>
@@ -280,11 +288,21 @@ export function EmptyState({ message, icon: Icon }: { message: string; icon?: Lu
   );
 }
 
-export function Section({ title, children, actions }: { title: string; children: React.ReactNode; actions?: React.ReactNode }) {
+export function Section({
+  title,
+  children,
+  actions,
+}: {
+  title: string;
+  children: React.ReactNode;
+  actions?: React.ReactNode;
+}) {
   return (
     <section className="rounded-md border border-border bg-card">
       <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{title}</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          {title}
+        </h2>
         {actions}
       </div>
       <div className="p-4">{children}</div>
@@ -308,7 +326,12 @@ export function Badge({
     muted: "bg-muted text-muted-foreground",
   }[tone];
   return (
-    <span className={cn("inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium", toneCls)}>
+    <span
+      className={cn(
+        "inline-flex items-center rounded px-1.5 py-0.5 text-[10px] font-medium",
+        toneCls,
+      )}
+    >
       {children}
     </span>
   );

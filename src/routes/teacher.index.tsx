@@ -9,7 +9,8 @@ export const Route = createFileRoute("/teacher/")({ component: TeacherDash });
 function TeacherDash() {
   const { state, currentUser } = useStore();
   const teacher = state.teachers.find((t) => t.id === currentUser?.teacherId);
-  if (!teacher) return <div className="p-6 text-sm text-muted-foreground">No teacher profile linked.</div>;
+  if (!teacher)
+    return <div className="p-6 text-sm text-muted-foreground">No teacher profile linked.</div>;
 
   const myClasses = state.classes.filter((c) => teacher.classes.includes(c.id));
   const myHomework = state.homework.filter((h) => h.teacherId === teacher.id);
@@ -17,7 +18,12 @@ function TeacherDash() {
 
   return (
     <div>
-      <PageHeader title={`Welcome, ${teacher.name}`} subtitle={teacher.subjects.map((sid) => state.subjects.find((s) => s.id === sid)?.name).join(" · ")} />
+      <PageHeader
+        title={`Welcome, ${teacher.name}`}
+        subtitle={teacher.subjects
+          .map((sid) => state.subjects.find((s) => s.id === sid)?.name)
+          .join(" · ")}
+      />
       <div className="space-y-4 p-6">
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Stat label="My Classes" value={myClasses.length} />
@@ -28,15 +34,23 @@ function TeacherDash() {
         <Section title="My Classes">
           <div className="grid gap-2 sm:grid-cols-2 md:grid-cols-3">
             {myClasses.map((c) => (
-              <Link key={c.id} to="/teacher/classes" className="rounded-md border border-border p-3 hover:border-accent">
+              <Link
+                key={c.id}
+                to="/teacher/classes"
+                className="rounded-md border border-border p-3 hover:border-accent"
+              >
                 <div className="text-sm font-medium">{c.name}</div>
-                <div className="text-[11px] text-muted-foreground">{state.students.filter((s) => s.classId === c.id).length} students</div>
+                <div className="text-[11px] text-muted-foreground">
+                  {state.students.filter((s) => s.classId === c.id).length} students
+                </div>
               </Link>
             ))}
           </div>
         </Section>
         <Section title="Recent Homework">
-          {myHomework.length === 0 ? <EmptyState message="No homework yet" icon={BookOpen} /> : (
+          {myHomework.length === 0 ? (
+            <EmptyState message="No homework yet" icon={BookOpen} />
+          ) : (
             <ul className="space-y-2">
               {myHomework.slice(0, 5).map((h) => {
                 const cls = state.classes.find((c) => c.id === h.classId);
