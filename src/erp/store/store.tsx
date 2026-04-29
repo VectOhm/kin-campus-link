@@ -2,7 +2,7 @@ import * as React from "react";
 import type { ERPState, User, ActivityLog, Role } from "../types";
 import { buildSeed } from "./seed";
 
-const STORAGE_KEY = "erp_state_v1";
+const STORAGE_KEY = "erp_state_v2";
 const SESSION_KEY = "erp_session_v1";
 
 type Updater = (s: ERPState) => ERPState;
