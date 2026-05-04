@@ -24,6 +24,11 @@ export interface Student {
   address: string;
   admissionDate: string;
   busRouteId?: string;
+  /** assigned bus stop within the route */
+  busStopId?: string;
+  /** profile photo URL (data URL or external) */
+  photoUrl?: string;
+  gender?: "male" | "female";
   documents?: Document[];
 }
 
