@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useStore } from "@/erp/store/store";
-import { PageHeader, Section, Badge, EmptyState } from "@/erp/components/Shell";
-import { Plus, Trash2, Search, Users } from "lucide-react";
+import { PageHeader, Badge, EmptyState } from "@/erp/components/Shell";
+import { Plus, Trash2, Search, Users, LayoutGrid, List } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin/students")({
@@ -12,6 +12,7 @@ export const Route = createFileRoute("/admin/students")({
 function StudentsPage() {
   const { state, update } = useStore();
   const [open, setOpen] = useState(false);
+  const [view, setView] = useState<"table" | "cards">("cards");
   const [q, setQ] = useState("");
   const [classFilter, setClassFilter] = useState<string>("all");
   const [busFilter, setBusFilter] = useState<string>("all");
@@ -35,19 +36,7 @@ function StudentsPage() {
         ? state.feePayments.some((p) => p.studentId === s.id && p.status === "pending")
         : state.feePayments.filter((p) => p.studentId === s.id).every((p) => p.status === "paid"));
     // Gender heuristic from first name list (simple check)
-    const femaleNames = [
-      "Anaya",
-      "Diya",
-      "Saanvi",
-      "Aadhya",
-      "Myra",
-      "Sara",
-      "Riya",
-      "Pari",
-      "Anika",
-      "Navya",
-    ];
-    const isFemale = femaleNames.some((n) => s.name.startsWith(n));
+    const isFemale = s.gender === "female";
     const matchGender = gender === "all" || (gender === "female" ? isFemale : !isFemale);
     const matchAdmFrom = !admittedFrom || s.admissionDate >= admittedFrom;
     const matchAdmTo = !admittedTo || s.admissionDate <= admittedTo;
@@ -78,12 +67,30 @@ function StudentsPage() {
         title="Students"
         subtitle={`${state.students.length} enrolled`}
         actions={
-          <button
-            onClick={() => setOpen(true)}
-            className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
-          >
-            <Plus className="h-3.5 w-3.5" /> Add student
-          </button>
+          <div className="flex items-center gap-2">
+            <div className="flex rounded-md border border-border bg-card p-0.5">
+              <button
+                onClick={() => setView("cards")}
+                className={`flex items-center gap-1 rounded px-2 py-1 text-[11px] ${view === "cards" ? "bg-muted" : ""}`}
+                title="Card view"
+              >
+                <LayoutGrid className="h-3 w-3" /> Cards
+              </button>
+              <button
+                onClick={() => setView("table")}
+                className={`flex items-center gap-1 rounded px-2 py-1 text-[11px] ${view === "table" ? "bg-muted" : ""}`}
+                title="Table view"
+              >
+                <List className="h-3 w-3" /> Table
+              </button>
+            </div>
+            <button
+              onClick={() => setOpen(true)}
+              className="flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              <Plus className="h-3.5 w-3.5" /> Add student
+            </button>
+          </div>
         }
       />
       <div className="space-y-4 p-6">
@@ -172,11 +179,12 @@ function StudentsPage() {
 
         {filtered.length === 0 ? (
           <EmptyState message="No students match your filters." icon={Users} />
-        ) : (
+        ) : view === "table" ? (
           <div className="overflow-x-auto rounded-md border border-border bg-card">
             <table className="data-table w-full">
               <thead>
                 <tr>
+                  <th>Photo</th>
                   <th>Roll</th>
                   <th>Name</th>
                   <th>Class</th>
@@ -193,6 +201,9 @@ function StudentsPage() {
                   const route = state.busRoutes.find((b) => b.id === s.busRouteId);
                   return (
                     <tr key={s.id}>
+                      <td>
+                        <Avatar src={s.photoUrl} name={s.name} size={32} />
+                      </td>
                       <td className="font-mono text-xs">{s.rollNo}</td>
                       <td className="font-medium">{s.name}</td>
                       <td>{cls?.name}</td>
@@ -220,6 +231,58 @@ function StudentsPage() {
               </tbody>
             </table>
           </div>
+        ) : (
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            {filtered.map((s) => {
+              const cls = state.classes.find((c) => c.id === s.classId);
+              const route = state.busRoutes.find((b) => b.id === s.busRouteId);
+              const pendingFees = state.feePayments.filter(
+                (f) => f.studentId === s.id && f.status === "pending",
+              ).length;
+              return (
+                <div
+                  key={s.id}
+                  className="group relative rounded-lg border border-border bg-card p-3 hover:border-accent transition-colors"
+                >
+                  <button
+                    onClick={() => remove(s.id)}
+                    className="absolute right-2 top-2 rounded p-1 text-muted-foreground opacity-0 group-hover:opacity-100 hover:bg-destructive/10 hover:text-destructive"
+                  >
+                    <Trash2 className="h-3 w-3" />
+                  </button>
+                  <div className="flex flex-col items-center text-center">
+                    <Avatar src={s.photoUrl} name={s.name} size={64} />
+                    <div className="mt-2 text-sm font-semibold leading-tight">{s.name}</div>
+                    <div className="font-mono text-[10px] text-muted-foreground">
+                      {s.rollNo} · {cls?.name}
+                    </div>
+                  </div>
+                  <div className="mt-3 space-y-1 text-[11px]">
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Parent</span>
+                      <span className="truncate font-medium">{s.parentName}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Phone</span>
+                      <span className="font-mono">{s.parentPhone.slice(-10)}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Bus</span>
+                      <span>{route ? route.name.split("—")[0] : "—"}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-muted-foreground">Fees</span>
+                      {pendingFees ? (
+                        <Badge tone="warning">{pendingFees} pending</Badge>
+                      ) : (
+                        <Badge tone="success">cleared</Badge>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
 
@@ -240,6 +303,8 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
     dob: "",
     address: "",
     busRouteId: "",
+    photoUrl: "",
+    gender: "male" as "male" | "female",
   });
 
   type FormType = typeof form;
@@ -254,6 +319,8 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
     const cls = state.classes.find((c) => c.id === form.classId)!;
     const fs = state.feeStructures.find((f) => f.grade === cls.grade)!;
     const yr = `${new Date().getFullYear()}-${new Date().getFullYear() + 1}`;
+    const seed = encodeURIComponent(form.name + id);
+    const fallbackPhoto = `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
     update(
       (s) => ({
         ...s,
@@ -273,6 +340,8 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
             address: form.address,
             admissionDate: new Date().toISOString().split("T")[0],
             busRouteId: form.busRouteId || undefined,
+            photoUrl: form.photoUrl || fallbackPhoto,
+            gender: form.gender,
             documents: [],
           },
         ],
