@@ -2,8 +2,44 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useStore } from "@/erp/store/store";
 import { PageHeader, Badge, EmptyState } from "@/erp/components/Shell";
-import { Plus, Trash2, Search, Users, LayoutGrid, List } from "lucide-react";
+import { Plus, Trash2, Search, Users, LayoutGrid, List, Upload } from "lucide-react";
 import { toast } from "sonner";
+
+export function Avatar({
+  src,
+  name,
+  size = 40,
+}: {
+  src?: string;
+  name: string;
+  size?: number;
+}) {
+  const initials = name
+    .split(" ")
+    .map((p) => p[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+  return (
+    <div
+      className="inline-flex items-center justify-center overflow-hidden rounded-full border border-border bg-muted text-[10px] font-semibold text-muted-foreground"
+      style={{ width: size, height: size, fontSize: Math.max(10, size * 0.32) }}
+    >
+      {src ? (
+        <img
+          src={src}
+          alt={name}
+          className="h-full w-full object-cover"
+          onError={(e) => {
+            (e.currentTarget as HTMLImageElement).style.display = "none";
+          }}
+        />
+      ) : (
+        initials
+      )}
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/admin/students")({
   component: StudentsPage,
@@ -414,10 +450,19 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
               key={key}
               label={label}
               type={type}
-              value={(form as FormType)[key]}
+              value={(form as unknown as Record<string, string>)[key]}
               onChange={(v) => setForm({ ...form, [key]: v })}
             />
           ))}
+          <SelectField
+            label="Gender"
+            value={form.gender}
+            onChange={(v) => setForm({ ...form, gender: v as "male" | "female" })}
+            options={[
+              ["male", "Male"],
+              ["female", "Female"],
+            ]}
+          />
           <SelectField
             label="Class"
             value={form.classId}
@@ -433,6 +478,33 @@ function AddStudentModal({ onClose }: { onClose: () => void }) {
               ...state.busRoutes.map((b) => [b.id, b.name] as [string, string]),
             ]}
           />
+          <div className="col-span-2">
+            <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
+              Photo
+            </label>
+            <div className="mt-1 flex items-center gap-3">
+              <Avatar src={form.photoUrl} name={form.name || "?"} size={56} />
+              <label className="flex cursor-pointer items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-xs hover:bg-muted">
+                <Upload className="h-3 w-3" /> Upload
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = () =>
+                      setForm((f) => ({ ...f, photoUrl: reader.result as string }));
+                    reader.readAsDataURL(file);
+                  }}
+                />
+              </label>
+              <span className="text-[10px] text-muted-foreground">
+                Leave blank for auto-generated avatar
+              </span>
+            </div>
+          </div>
           <div className="col-span-2">
             <label className="text-[11px] font-medium uppercase tracking-wider text-muted-foreground">
               Address
