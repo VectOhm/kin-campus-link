@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useStore } from "@/erp/store/store";
 import { PageHeader, Stat, Section, Badge, EmptyState } from "@/erp/components/Shell";
+import { Avatar } from "@/routes/admin.students";
 import { BookOpen } from "lucide-react";
 
 export const Route = createFileRoute("/parent/")({ component: ParentDash });
@@ -20,7 +21,11 @@ function ParentDash() {
 
   return (
     <div>
-      <PageHeader title={student.name} subtitle={`${cls?.name} · Roll ${student.rollNo}`} />
+      <PageHeader
+        title={student.name}
+        subtitle={`${cls?.name} · Roll ${student.rollNo}`}
+        actions={<Avatar src={student.photoUrl} name={student.name} size={48} />}
+      />
       <div className="space-y-4 p-6">
         <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <Stat

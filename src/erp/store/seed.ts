@@ -248,11 +248,21 @@ export function buildSeed(): ERPState {
 
   const students: Student[] = [];
   let sIdx = 0;
+  const femaleNamesSet = new Set([
+    "Anaya","Diya","Saanvi","Aadhya","Myra","Sara","Riya","Pari","Anika","Navya",
+  ]);
   classes.forEach((c) => {
     for (let i = 0; i < 4; i++) {
       const fn = firstNames[(sIdx + i) % firstNames.length];
       const ln = lastNames[(sIdx + i * 3) % lastNames.length];
       const sid = id("std", sIdx + 1);
+      const isFemale = femaleNamesSet.has(fn);
+      // Deterministic avatar via DiceBear (no network at build, fetched at render)
+      const avatarStyle = isFemale ? "avataaars" : "avataaars";
+      const seed = encodeURIComponent(`${fn}-${ln}-${sid}`);
+      const photoUrl = `https://api.dicebear.com/7.x/${avatarStyle}/svg?seed=${seed}&backgroundColor=b6e3f4,c0aede,d1d4f9,ffd5dc,ffdfbf`;
+      const route = i < 2 ? busRoutes[i % busRoutes.length] : undefined;
+      const stop = route ? route.stops[sIdx % route.stops.length] : undefined;
       students.push({
         id: sid,
         rollNo: `${c.grade}${(i + 1).toString().padStart(2, "0")}`,
@@ -264,7 +274,10 @@ export function buildSeed(): ERPState {
         dob: iso(new Date(today.getFullYear() - (5 + c.grade), sIdx % 12, (sIdx % 27) + 1)),
         address: `${10 + sIdx} ${["Park St", "Lake Rd", "Hill Ln", "Garden Ave"][i % 4]}`,
         admissionDate: daysAgo(180 + sIdx),
-        busRouteId: i < 2 ? busRoutes[i % busRoutes.length].id : undefined,
+        busRouteId: route?.id,
+        busStopId: stop?.id,
+        photoUrl,
+        gender: isFemale ? "female" : "male",
         documents: [
           {
             id: `doc_${sid}_1`,

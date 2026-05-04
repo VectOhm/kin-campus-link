@@ -11,6 +11,7 @@ export const Route = createFileRoute("/parent/notifications")({
         senderRole="parent"
         forUserId={currentUser?.id}
         audienceOptions={["student"]}
+        receiveOnly
       />
     );
   },
